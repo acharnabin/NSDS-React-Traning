@@ -1,0 +1,30 @@
+.navbar {
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navbar_left {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navbar_right_ul {
+    display: flex;
+    list-style: none;
+    justify-content: space-evenly;
+  }
+  
+  .link {
+    /* padding:10px; */
+    /* border:2px solid black; */
+    /* margin-top: 20px; */
+    margin-right: 20px;
+    margin-left: 10px;
+    /* margin:10px */
+  }
+  
