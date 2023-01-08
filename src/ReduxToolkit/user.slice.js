@@ -17,9 +17,19 @@ export const Login_User = createAsyncThunk("/api/login", async (data) => {
   }
 });
 
+export const Signup_User = createAsyncThunk("/api/signup", async (data) => {
+  try {
+    const res = await axiosInstance.post(endpoint.signup, data);
+    return res?.data;
+  } catch (error) {
+    console.log("error in signup**", error);
+  }
+});
+
 const initialState = {
   isLoggedIn: false,
   Login_User_status: "idle",
+  signup_User_status: "idle",
   userData: null,
 };
 
@@ -39,15 +49,15 @@ const userSlice = createSlice({
         }
       }
     },
-    Logout:(state)=>{
-        state.isLoggedIn=false;
-        state.userData=null;
-        removeFromLocalStorage('token');
-        removeFromLocalStorage('userData');
-
-    }
+    Logout: (state) => {
+      state.isLoggedIn = false;
+      state.userData = null;
+      removeFromLocalStorage("token");
+      removeFromLocalStorage("userData");
+    },
   },
   extraReducers: {
+    // FOR login
     [Login_User.pending]: (state) => {
       state.Login_User_status = "loading";
     },
@@ -68,9 +78,31 @@ const userSlice = createSlice({
       toast.error("Something went wrong");
       state.Login_User_status = "idle";
     },
+
+    //for sign up
+    [Signup_User.pending]: (state) => {
+      state.signup_User_status = "loading";
+    },
+    [Signup_User.fulfilled]: (state, { payload }) => {
+      state.signup_User_status = "idle";
+
+      if (payload?.status === 200) {
+        toast.success("sign up sucessfull");
+        state.userData = payload?.data;
+        saveInLocalStorage("userData", JSON.stringify(payload?.data));
+        saveInLocalStorage("token", payload?.token);
+        state.isLoggedIn = true;
+      } else {
+        toast.error("Something went wrong");
+      }
+    },
+    [Signup_User.rejected]: (state) => {
+      toast.error("Something went wrong");
+      state.signup_User_status = "idle";
+    },
   },
 });
 
-export const { checkLogin,Logout } = userSlice.actions;
+export const { checkLogin, Logout } = userSlice.actions;
 
 export default userSlice.reducer;
